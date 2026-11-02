@@ -121,6 +121,15 @@ export interface InventorySaleRequest {
   soldAt: string;
 }
 
+export interface DailyFinancialTrendResponse {
+  date: string;
+  currency: string;
+  sales: number;
+  salesCount: number;
+  expenses: number;
+  expenseCount: number;
+  netCashFlow: number;
+}
 
 
 
@@ -215,6 +224,17 @@ recordInventorySale: (data: InventorySaleRequest) =>
     method: "POST",
     body: JSON.stringify(data),
   }),
+
+  getDailyFinancialTrends: (
+  startDate: string,
+  endDate: string
+) =>
+  request<DailyFinancialTrendResponse[]>(
+    `/analytics/financial-trends/daily?${new URLSearchParams({
+      startDate,
+      endDate,
+    }).toString()}`
+  ),
 
     
 };
