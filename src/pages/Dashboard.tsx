@@ -1,6 +1,36 @@
 import { ArrowDownRight, ArrowUpRight, Bot, ChartNoAxesCombined, Package, Plus, Receipt, Sparkles, Wallet } from "lucide-react";
+import { useEffect, useState } from "react";
+import { authApi, type BusinessSummary } from "../services/api";
 
-export default function Dashboard() {
+export default function Dashboard() {const [summaries, setSummaries] = useState<BusinessSummary[]>([]);
+const [loading, setLoading] = useState(true);
+const [error, setError] = useState("");
+
+useEffect(() => {
+  async function loadBusinessSummary() {
+    try {
+      const data = await authApi.getBusinessSummary();
+      setSummaries(data);
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : "Unable to load business summary."
+      );
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  loadBusinessSummary();
+}, []);
+
+const formatCurrency = (amount: number, currency: string) =>
+  new Intl.NumberFormat("en-NG", {
+    style: "currency",
+    currency,
+    maximumFractionDigits: 2,
+  }).format(amount);
+
+
   return (
     <>
       <div className="welcome-row">
@@ -28,45 +58,55 @@ export default function Dashboard() {
           <h2>Business overview</h2>
           <p>Your financial snapshot</p>
         </div>
-        <select defaultValue="week" className="period-select">
-          <option value="week">This week</option>
-          <option value="month">This month</option>
-        </select>
+        <span className="period-select">All recorded transactions</span>
       </div>
 
-      <section className="stats-grid">
+<section className="stats-grid">
+  {loading ? (
+    <p>Loading business summary...</p>
+  ) : error ? (
+    <p className="auth-error">{error}</p>
+  ) : summaries.length === 0 ? (
+    <p>No financial transactions recorded yet.</p>
+  ) : (
+    summaries.map((summary) => (
+      <div className="currency-summary" key={summary.currency}>
+
         <StatCard
           title="Total Revenue"
-          value="₦585,000"
-          change="Previous period"
+          value={formatCurrency(summary.totalRevenue, summary.currency)}
+          change="Recorded sales"
           icon={<Wallet size={20} />}
           color="green"
-          direction="up"
         />
+
         <StatCard
           title="Total Expenses"
-          value="₦15,000"
-          change="Previous period"
+          value={formatCurrency(summary.totalExpenses, summary.currency)}
+          change="Recorded expenses"
           icon={<Receipt size={20} />}
           color="orange"
-          direction="down"
         />
+
         <StatCard
           title="Net Cash Flow"
-          value="₦570,000"
+          value={formatCurrency(summary.netCashFlow, summary.currency)}
           change="Revenue − expenses"
           icon={<ChartNoAxesCombined size={20} />}
           color="blue"
-          direction="up"
         />
-        <StatCard
-          title="Inventory"
-          value="Products"
-          change="Manage your stock"
-          icon={<Package size={20} />}
-          color="purple"
-        />
-      </section>
+      </div>
+    ))
+  )}
+
+  <StatCard
+    title="Inventory"
+    value="Products"
+    change="Manage your stock"
+    icon={<Package size={20} />}
+    color="purple"
+  />
+    </section>
 
       <section className="bottom-grid">
         <div className="panel">

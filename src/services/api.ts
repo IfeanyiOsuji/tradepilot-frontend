@@ -20,6 +20,13 @@ export interface AuthResponse {
   email: string;
 }
 
+export interface BusinessSummary {
+  currency: string;
+  totalRevenue: number;
+  totalExpenses: number;
+  netCashFlow: number;
+}
+
 async function request<T>(
   endpoint: string,
   options: RequestInit = {}
@@ -55,4 +62,9 @@ export const authApi = {
       method: "POST",
       body: JSON.stringify(data),
     }),
+    
+    getBusinessSummary: () =>
+  request<BusinessSummary[]>("/business/summary"),
+
+    
 };
