@@ -1,8 +1,10 @@
 import { ArrowDownRight, ArrowUpRight, Bot, ChartNoAxesCombined, Package, Plus, Receipt, Sparkles, Wallet } from "lucide-react";
 import { useEffect, useState } from "react";
 import { authApi, type BusinessSummary } from "../services/api";
+import { useNavigate } from "react-router-dom";
 
 export default function Dashboard() {const [summaries, setSummaries] = useState<BusinessSummary[]>([]);
+const navigate = useNavigate();
 const [loading, setLoading] = useState(true);
 const [error, setError] = useState("");
 
@@ -48,7 +50,7 @@ const formatCurrency = (amount: number, currency: string) =>
           <strong>Your business, powered by AI</strong>
           <p>Ask TradePilot to analyse your sales, track expenses and uncover business insights.</p>
         </div>
-        <button onClick={() => window.dispatchEvent(new Event("open-ai"))}>
+        <button onClick={() => navigate("/assistant")}>
           Explore AI Assistant <ArrowUpRight size={16} />
         </button>
       </section>
@@ -138,7 +140,7 @@ const formatCurrency = (amount: number, currency: string) =>
           </div>
           <div className="suggestion">How is my business performing?</div>
           <div className="suggestion">Compare this week's revenue</div>
-          <button className="chat-button" onClick={() => window.dispatchEvent(new Event("open-ai"))}>
+          <button className="chat-button" onClick={() => navigate("/assistant")}>
             Start a conversation <ArrowUpRight size={16} />
           </button>
         </div>

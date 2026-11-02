@@ -27,6 +27,49 @@ export interface BusinessSummary {
   netCashFlow: number;
 }
 
+export interface AssistantRequest {
+  message: string;
+}
+
+export interface AssistantResponse {
+  answer: string;
+  intent: string;
+  startDate: string | null;
+  endDate: string | null;
+  summaries: BusinessSummary[] | null;
+  lowStockItems: Record<string, unknown>[] | null;
+  restockRecommendations: Record<string, unknown>[] | null;
+  bestSellingProducts: Record<string, unknown>[] | null;
+  inactiveProductResponses: Record<string, unknown>[] | null;
+  inventoryValuations: Record<string, unknown>[] | null;
+  dailyFinancialTrends: Record<string, unknown>[] | null;
+  financialComparisons: Record<string, unknown>[] | null;
+}
+
+
+export type SaleType = "PRODUCT" | "SERVICE";
+
+export interface CreateSaleRequest {
+  itemName: string;
+  saleType: SaleType;
+  quantity: number;
+  unitPrice: number;
+  currency: string;
+  soldAt: string;
+}
+
+export interface SaleResponse {
+  id: number;
+  itemName: string;
+  saleType: SaleType;
+  quantity: number;
+  unitPrice: number;
+  currency: string;
+  soldAt: string;
+  totalAmount: number;
+}
+
+
 async function request<T>(
   endpoint: string,
   options: RequestInit = {}
@@ -62,9 +105,15 @@ export const authApi = {
       method: "POST",
       body: JSON.stringify(data),
     }),
-    
+
     getBusinessSummary: () =>
   request<BusinessSummary[]>("/business/summary"),
+
+    chat: (message: string) =>
+  request<AssistantResponse>("/assistant/chat", {
+    method: "POST",
+    body: JSON.stringify({ message }),
+  }),
 
     
 };
