@@ -27,6 +27,23 @@ export interface BusinessSummary {
   netCashFlow: number;
 }
 
+export interface ExpenseRequest {
+  description: string;
+  category: string;
+  amount: number;
+  currency: string;
+  incurredAt: string;
+}
+
+export interface ExpenseResponse {
+  id: number;
+  description: string;
+  category: string;
+  amount: number;
+  currency: string;
+  incurredAt: string;
+}
+
 export interface AssistantRequest {
   message: string;
 }
@@ -125,6 +142,13 @@ createSale: (data: CreateSaleRequest) =>
 getSales: () =>
   request<SaleResponse[]>("/sales"),
 
+getExpenses: () =>
+  request<ExpenseResponse[]>("/expenses"),
 
+createExpense: (data: ExpenseRequest) =>
+  request<ExpenseResponse>("/expenses", {
+    method: "POST",
+    body: JSON.stringify(data),
+  }),
     
 };

@@ -5,6 +5,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Assistant from "./pages/Assistant";
 import Sales from "./pages/Sales";
+import Expenses from "./pages/Expenses";
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const token = localStorage.getItem("accessToken");
@@ -41,6 +42,14 @@ export default function App() {
            <ProtectedRoute>
            <Sales />
          </ProtectedRoute>
+          }
+        />
+        <Route
+        path="/expenses"
+        element={
+          <ProtectedRoute>
+          <Expenses />
+          </ProtectedRoute>
           }
         />
 
