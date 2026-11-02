@@ -115,5 +115,16 @@ export const authApi = {
     body: JSON.stringify({ message }),
   }),
 
+  
+createSale: (data: CreateSaleRequest) =>
+  request<SaleResponse>("/sales", {
+    method: "POST",
+    body: JSON.stringify(data),
+  }),
+
+getSales: () =>
+  request<SaleResponse[]>("/sales"),
+
+
     
 };

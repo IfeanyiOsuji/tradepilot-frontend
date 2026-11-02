@@ -41,8 +41,10 @@ const formatCurrency = (amount: number, currency: string) =>
           <h1>Good morning! 👋</h1>
           <p>Here's what's happening with your business today.</p>
         </div>
-        <button className="primary-button"><Plus size={18} /> Record a sale</button>
-      </div>
+        <button className="primary-button" onClick={() => navigate("/sales")}>
+        <Plus size={18} /> Record a sale
+        </button>      
+    </div>
 
       <section className="ai-banner">
         <div className="ai-banner-icon"><Sparkles size={23} /></div>
