@@ -77,6 +77,14 @@ export default function Dashboard() {
   const [trendsError, setTrendsError] = useState("");
   const [selectedCurrency, setSelectedCurrency] = useState("NGN");
 
+  const storedUser = localStorage.getItem("user");
+
+const currentUser = storedUser
+  ? JSON.parse(storedUser)
+  : null;
+
+const firstName = currentUser?.fullName?.trim().split(/\s+/)[0] || "";
+
   useEffect(() => {
     async function loadDashboard() {
       const { startDate, endDate } = getLastSevenDays();
@@ -177,7 +185,9 @@ export default function Dashboard() {
       <div className="welcome-row">
         <div>
           <div className="eyebrow">{todayLabel}</div>
-          <h1>Welcome back! 👋</h1>
+          <h1>
+            Welcome back{firstName ? `, ${firstName}` : ""}! 👋
+        </h1>
           <p>Here's what's happening with your business today.</p>
         </div>
 

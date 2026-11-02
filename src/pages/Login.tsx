@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { authApi } from "../services/api";
+import { getTokenExpiration, isSessionExpired, saveSession } from "../utils/session";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -19,14 +20,23 @@ export default function Login() {
     try {
       const result = await authApi.login({ email, password });
 
-      localStorage.setItem("accessToken", result.accessToken);
-      localStorage.setItem("user", JSON.stringify({
-        userId: result.userId,
-        fullName: result.fullName,
-        email: result.email,
-      }));
+saveSession(result.accessToken, {
+  userId: result.userId,
+  fullName: result.fullName,
+  email: result.email,
+});
 
-      navigate("/");
+console.log("LOGIN DEBUG:", {
+  tokenStored: Boolean(localStorage.getItem("accessToken")),
+  lastActivityAt: localStorage.getItem("lastActivityAt"),
+  sessionExpired: isSessionExpired(),
+  tokenExpiresAt: new Date(
+    getTokenExpiration(result.accessToken) ?? 0
+  ).toLocaleString(),
+  currentTime: new Date().toLocaleString(),
+});
+
+navigate("/", { replace: true });
     } catch (err) {
       setError(err instanceof Error ? err.message : "Login failed.");
     } finally {

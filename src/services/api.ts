@@ -1,3 +1,5 @@
+import { clearSession, getToken, isSessionExpired } from "../utils/session";
+
 const API_BASE_URL = "http://localhost:8080/api/v1";
 
 export interface LoginRequest {
@@ -134,28 +136,60 @@ export interface DailyFinancialTrendResponse {
 
 
 
+
 async function request<T>(
   endpoint: string,
   options: RequestInit = {}
 ): Promise<T> {
-  const token = localStorage.getItem("accessToken");
+
+  const isAuthEndpoint =
+    endpoint === "/auth/login" ||
+    endpoint === "/auth/register";
+
+  if (!isAuthEndpoint && isSessionExpired()) {
+    clearSession();
+    throw new Error(
+      "Your session has expired. Please sign in again."
+    );
+  }
+
+  const token = getToken();
 
   const response = await fetch(`${API_BASE_URL}${endpoint}`, {
     ...options,
     headers: {
       "Content-Type": "application/json",
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      ...(!isAuthEndpoint && token
+        ? { Authorization: `Bearer ${token}` }
+        : {}),
       ...options.headers,
     },
   });
 
+  if (response.status === 401 && !isAuthEndpoint) {
+    clearSession();
+
+    throw new Error(
+      "Your session has expired. Please sign in again."
+    );
+  }
+
   if (!response.ok) {
     const error = await response.json().catch(() => null);
-    throw new Error(error?.message || `Request failed: ${response.status}`);
+
+    throw new Error(
+      error?.message ||
+      `Request failed: ${response.status}`
+    );
+  }
+
+  if (response.status === 204) {
+    return undefined as T;
   }
 
   return response.json() as Promise<T>;
 }
+
 
 export const authApi = {
   login: (data: LoginRequest) =>
