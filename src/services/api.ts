@@ -87,6 +87,44 @@ export interface SaleResponse {
 }
 
 
+export interface InventoryRequest {
+  productName: string;
+  sku: string;
+  quantityInStock: number;
+  unitCost: number;
+  sellingPrice: number;
+  currency: string;
+  lowStockThreshold: number;
+  targetStockLevel: number;
+}
+
+export interface InventoryResponse extends InventoryRequest {
+  id: number;
+}
+
+export interface InventoryItem {
+  id: number;
+  productName: string;
+  sku: string;
+  quantityInStock: number;
+  unitCost: number;
+  sellingPrice: number;
+  currency: string;
+  lowStockThreshold: number;
+  targetStockLevel: number;
+}
+
+export interface InventorySaleRequest {
+  inventoryItemId: number;
+  quantity: number;
+  unitPrice: number;
+  soldAt: string;
+}
+
+
+
+
+
 async function request<T>(
   endpoint: string,
   options: RequestInit = {}
@@ -150,5 +188,33 @@ createExpense: (data: ExpenseRequest) =>
     method: "POST",
     body: JSON.stringify(data),
   }),
+
+  
+getInventory: () =>
+  request<InventoryResponse[]>("/inventory"),
+
+createInventoryItem: (data: InventoryRequest) =>
+  request<InventoryResponse>("/inventory", {
+    method: "POST",
+    body: JSON.stringify(data),
+  }),
+
+getLowStockInventory: () =>
+  request<InventoryResponse[]>("/inventory/low-stock"),
+
+searchInventory: (productName: string) =>
+  request<InventoryResponse[]>(
+    `/inventory/search?productName=${encodeURIComponent(productName)}`
+  ),
+
+  getInventoryItems: () =>
+  request<InventoryItem[]>("/inventory"),
+
+recordInventorySale: (data: InventorySaleRequest) =>
+  request<unknown>("/sales/from-inventory", {
+    method: "POST",
+    body: JSON.stringify(data),
+  }),
+
     
 };

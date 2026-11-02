@@ -910,3 +910,42 @@ h1 { font-size: 29px; margin: 9px 0 5px; letter-spacing: -1px; }
 }
 
 
+.sales-mode-selector {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 24px 0;
+}
+
+.sales-mode-selector button {
+  padding: 12px 20px;
+  border: 1px solid #dce5e0;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #24473b;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.sales-mode-selector button.active {
+  background: #173f33;
+  color: #ffffff;
+  border-color: #173f33;
+}
+
+.sales-mode-selector button:hover {
+  border-color: #176c4a;
+}
+
+.sales-field input:read-only {
+  background: #f3f7f5;
+}
+
+.sales-field select:disabled {
+  background: #f3f7f5;
+  cursor: not-allowed;
+}
+
+
+
