@@ -1148,4 +1148,24 @@ h1 { font-size: 29px; margin: 9px 0 5px; letter-spacing: -1px; }
   cursor: pointer;
 }
 
+.auth-success {
+  background: #e8f5e9;
+  border: 1px solid #a5d6a7;
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin: 20px 0;
+  color: #1b5e20;
+  font-size: 14px;
+}
+
+.auth-success strong {
+  display: block;
+  margin-bottom: 6px;
+}
+
+.auth-success p {
+  margin: 0;
+  line-height: 1.5;
+}
+
 

@@ -21,9 +21,13 @@ export default function Register() {
       await authApi.register({ fullName, email, password });
 
       // Registration succeeded. Ask the user to sign in.
-      navigate("/login", {
-        state: { message: "Account created successfully. Please sign in." },
-      });
+    navigate("/login", {
+        replace: true,
+        state: {
+        message: "Account created successfully. Please sign in.",
+        email: email.trim(),
+        },
+    });
     } catch (err) {
       setError(err instanceof Error ? err.message : "Registration failed.");
     } finally {
