@@ -11,29 +11,52 @@ export default function Register() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [confirmPassword, setConfirmPassword] = useState("");
 
-  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setError("");
-    setLoading(true);
+  async function handleSubmit(
+  event: React.FormEvent<HTMLFormElement>
+) {
+  event.preventDefault();
 
-    try {
-      await authApi.register({ fullName, email, password });
+  setError("");
 
-      // Registration succeeded. Ask the user to sign in.
+  // Validate password confirmation before API call
+  if (password !== confirmPassword) {
+    setError("Password and confirm password do not match.");
+    return;
+  }
+
+  if (password.length < 8) {
+    setError("Password must contain at least 8 characters.");
+    return;
+  }
+
+  setLoading(true);
+
+  try {
+    await authApi.register({
+      fullName: fullName.trim(),
+      email: email.trim(),
+      password,
+    });
+
     navigate("/login", {
-        replace: true,
-        state: {
+      replace: true,
+      state: {
         message: "Account created successfully. Please sign in.",
         email: email.trim(),
-        },
+      },
     });
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Registration failed.");
-    } finally {
-      setLoading(false);
-    }
+  } catch (err) {
+    setError(
+      err instanceof Error
+        ? err.message
+        : "Registration failed. Please try again."
+    );
+  } finally {
+    setLoading(false);
   }
+}
 
   return (
     <main className="auth-page">
@@ -69,6 +92,17 @@ export default function Register() {
             value={password}
             onChange={(event) => setPassword(event.target.value)}
             placeholder="Create a password"
+            minLength={8}
+            required
+          />
+
+          <label htmlFor="Confirm Password">Confirm Password</label>
+          <input
+            id="confirmPassword"
+            type="password"
+            value={confirmPassword}
+            onChange={(event) => setConfirmPassword(event.target.value)}
+            placeholder="confirm your password"
             minLength={8}
             required
           />
