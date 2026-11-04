@@ -96,16 +96,26 @@ export default function Register() {
             required
           />
 
-          <label htmlFor="Confirm Password">Confirm Password</label>
           <input
             id="confirmPassword"
             type="password"
             value={confirmPassword}
-            onChange={(event) => setConfirmPassword(event.target.value)}
-            placeholder="confirm your password"
+            onChange={(event) => {
+            setConfirmPassword(event.target.value);
+            setError("");
+          }}
+            placeholder="Confirm your password"
+            autoComplete="new-password"
             minLength={8}
             required
-          />
+        />
+
+        {confirmPassword.length > 0 &&
+        password !== confirmPassword && (
+        <p className="auth-error" role="alert">
+          Passwords do not match.
+          </p>
+        )}
 
           {error && <p className="auth-error">{error}</p>}
 
