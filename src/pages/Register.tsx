@@ -95,7 +95,7 @@ export default function Register() {
             minLength={8}
             required
           />
-
+          <label htmlFor="confirmPassword">Confirm Password</label>
           <input
             id="confirmPassword"
             type="password"
@@ -119,7 +119,14 @@ export default function Register() {
 
           {error && <p className="auth-error">{error}</p>}
 
-          <button type="submit" disabled={loading}>
+          <button
+              type="submit"
+              disabled={
+                loading ||
+                password !== confirmPassword ||
+                password.length < 8
+              }
+          >
             {loading ? "Creating account..." : "Create account"}
           </button>
         </form>
